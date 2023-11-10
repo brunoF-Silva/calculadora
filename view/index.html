@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora</title>
+    <style>
+        /* Estilos aqui (mantidos iguais) */
+    </style>
+</head>
+<body>
+    <div id="calculator">
+        <input type="number" id="num1" placeholder="Número 1" step="any">
+        <select id="operator">
+            <option value="+">+</option>
+            <option value="-">-</option>
+            <option value="*">*</option>
+            <option value="/">/</option>
+        </select>
+        <input type="number" id="num2" placeholder="Número 2" step="any">
+        <button onclick="sendData()">Calcular</button>
+        <p id="result">Resultado: </p>
+
+        <script>
+            function sendData() {
+                var num1 = parseFloat(document.getElementById('num1').value);
+                var num2 = parseFloat(document.getElementById('num2').value);
+                var operator = document.getElementById('operator').value;
+
+                // Usando AJAX para enviar dados para o PHP
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById('result').innerText = 'Resultado: ' + this.responseText;
+                    }
+                };
+                xhr.open("GET", "calculate.php?num1=" + num1 + "&num2=" + num2 + "&operator=" + operator, true);
+                xhr.send();
+            }
+        </script>
+    </div>
+</body>
+</html>
