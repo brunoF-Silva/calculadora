@@ -8,8 +8,8 @@ dados da tabela:
 
 CREATE TABLE Calculos (
     ID INT PRIMARY KEY,
-    numero1 DECIMAL,
-    numero2 DECIMAL,
+    numero1 FLOAT,
+    numero2 FLOAT,
     operacao VARCHAR(50),
     data TIMESTAMP
 );
