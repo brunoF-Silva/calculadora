@@ -1,7 +1,6 @@
 <?php
 
-require_once "../model/Connection.php";
-
+require_once 'Connection.php';
 class Data
 {
     public function calculator($num1, $num2, $operacao)
@@ -18,7 +17,14 @@ class Data
             $resultado = $num1 / $num2;
         }
 
-        $this->saveToDatabase($num1, $num2, $operacao, $resultado);
+        // Tenta salvar no banco de dados
+        try {
+            $this->saveToDatabase($num1, $num2, $operacao, $resultado);
+        } catch (PDOException $e) {
+            // Se houver um erro, você pode lidar com isso de alguma maneira (ex: log, redirecionar para uma página de erro)
+            // Aqui, estamos apenas registrando o erro no console
+            error_log("Erro ao salvar no banco de dados: " . $e->getMessage());
+        }
 
         return $resultado;
     }
@@ -31,19 +37,13 @@ class Data
 
         $data = date("Y-m-d H:i:s");
 
-        try {
-            $stmt = $pdo->prepare("INSERT INTO $tablename (numero1, numero2, operacao, resultado, data) VALUES (:num1, :num2, :operacao, :resultado, :data)");
-            $stmt->bindParam(':num1', $num1);
-            $stmt->bindParam(':num2', $num2);
-            $stmt->bindParam(':operacao', $operacao);
-            $stmt->bindParam(':resultado', $resultado);
-            $stmt->bindParam(':data', $data);
-            $stmt->execute();
-
-            echo "Dados inseridos com sucesso!";
-        } catch (PDOException $e) {
-            echo "Erro ao inserir dados: " . $e->getMessage();
-        }
+        $stmt = $pdo->prepare("INSERT INTO $tablename (numero1, numero2, operacao, resultado, data) VALUES (:num1, :num2, :operacao, :resultado, :data)");
+        $stmt->bindParam(':num1', $num1);
+        $stmt->bindParam(':num2', $num2);
+        $stmt->bindParam(':operacao', $operacao);
+        $stmt->bindParam(':resultado', $resultado);
+        $stmt->bindParam(':data', $data);
+        $stmt->execute();
     }
 }
 
